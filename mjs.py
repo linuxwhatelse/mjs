@@ -46,13 +46,6 @@ class _RequestHandler(server.BaseHTTPRequestHandler):
     _cookie      = None
     _payload     = None
 
-    _date_handle = lambda obj: (
-        obj.isoformat()
-        if isinstance(obj, datetime.datetime)
-        or isinstance(obj, datetime.date)
-        else None
-    )
-
     def do_GET(self):
         if not self._validate():
             return
@@ -76,7 +69,7 @@ class _RequestHandler(server.BaseHTTPRequestHandler):
 
             if self._payload != None:
                 self.wfile.write(bytes(json.dumps(self._payload,
-                    default=self._date_handle), 'utf-8'))
+                    default=self._serialize), 'utf-8'))
 
             else:
                 self.wfile.write(bytes(json.dumps([]), 'utf-8'))
@@ -192,6 +185,12 @@ class _RequestHandler(server.BaseHTTPRequestHandler):
         self.send_header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE')
         self.send_header('Access-Control-Allow-Headers', 'Content-Type')
         self.end_headers()
+
+    def _serialize(self, obj):
+        if isinstance(obj, datetime.datetime):
+            serial = obj.isoformat()
+
+        return serial
 
     def _validate(self):
         if not validator:
