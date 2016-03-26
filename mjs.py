@@ -249,6 +249,36 @@ class _RequestHandler(server.BaseHTTPRequestHandler):
             str(_incl_access_control_allow_credentials).lower())
 
 class Config(object):
+    """Config to be passed to the Server
+
+    Attributes:
+        address (str): The address to be used by the server.
+
+        port (int): The port to be used by the server.
+
+        incl_access_control_allow_origin (bool): Determines if
+            'Access-Control-Allow-Origin' should be includedin the servers
+            response header or not.
+
+        incl_access_control_allow_credentials (bool): Determines if
+            'Access-Control-Allow-Credentials' should be set to 'true' or
+            'false' in the servers response header.
+
+        validate_callback (function): A callback which will be called for
+            EVERY request (GET, POST, PUT, DELETE) BEFORE the actual resolved
+            function will be called.
+
+            This callback HAS to return either True (if the request is allowed),
+            or False (if the request is NOT allowed)
+
+            Usefully to implement e.g. authentication
+
+        validate_exclude_paths (list): A list of url-paths (without host:port)
+            to be excluded from validation.
+
+            e.g. ['/login', '/register']
+    """
+
     address = '0.0.0.0'
     port    = 8088
     incl_access_control_allow_origin      = False
