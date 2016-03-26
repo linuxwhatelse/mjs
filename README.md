@@ -4,7 +4,17 @@ mjs - Mapper JSON Server
 
 ## Requirements
 1. python 3.4 and up
-2. [mapper](https://github.com/linuxwhatelse/mapper)
+2. [mapper.py](https://github.com/linuxwhatelse/mapper)
+
+## Installation
+As this is a single file module with only one dependency being, [mapper.py](https://github.com/linuxwhatelse/mapper), you have two choices:
+
+1. Download [mjs.py](https://raw.githubusercontent.com/linuxwhatelse/mjs/master/mjs.py) and place it into the root directory of your project (next to mapper.py)
+2. Install it via setup.py
+ * Make sure [mapper.py](https://github.com/linuxwhatelse/mapper) is installed
+ * `git clone https://github.com/linuxwhatelse/mjs`
+ * `cd mjs`
+ * `python3 setup.py install`
 
 ## Usage
 It's pretty straight forward...
