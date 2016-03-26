@@ -35,8 +35,10 @@ import datetime
 
 import mapper
 
-validator = None
-validator_excludes = None
+_validator          = None
+_validator_excludes = None
+_incl_access_control_allow_origin      = False
+_incl_access_control_allow_credentials = False
 
 class _RequestHandler(server.BaseHTTPRequestHandler):
     _mpr         = mapper.Mapper()
@@ -193,15 +195,15 @@ class _RequestHandler(server.BaseHTTPRequestHandler):
         return serial
 
     def _validate(self):
-        if not validator:
+        if not _validator:
             return True
 
-        if validator_excludes:
-            if self.path in validator_excludes:
+        if _validator_excludes:
+            if self.path in _validator_excludes:
                 return True
 
         try:
-            valid = validator(self.path, self.headers)
+            valid = _validator(self.path, self.headers)
 
         except Exception as e:
             traceback.print_exc()
@@ -237,18 +239,20 @@ class _RequestHandler(server.BaseHTTPRequestHandler):
         self.end_headers()
 
     def _send_default_headers(self):
-        if 'Origin' in self.headers:
-            self.send_header('Access-Control-Allow-Origin', self.headers['Origin'])
-        else:
-            self.send_header('Access-Control-Allow-Origin', '*')
+        if _incl_access_control_allow_origin:
+            if 'Origin' in self.headers:
+                self.send_header('Access-Control-Allow-Origin', self.headers['Origin'])
+            else:
+                self.send_header('Access-Control-Allow-Origin', '*')
 
-        self.send_header('Access-Control-Allow-Credentials', 'true')
+        self.send_header('Access-Control-Allow-Credentials',
+            str(_incl_access_control_allow_credentials).lower())
 
 class Config(object):
-    """Config to be passed to the Server"""
-
-    address                = '0.0.0.0'
-    port                   = 8088
+    address = '0.0.0.0'
+    port    = 8088
+    incl_access_control_allow_origin      = False
+    incl_access_control_allow_credentials = False
     validate_callback      = None
     validate_exclude_paths = None
 
@@ -260,11 +264,19 @@ class Server(server.HTTPServer):
             conf (Config): configuration for this server instance
         """
         if conf.validate_callback:
-            global validator
-            validator = conf.validate_callback
+            global _validator
+            _validator = conf.validate_callback
 
         if conf.validate_exclude_paths:
-            global validator_excludes
-            validator_excludes = conf.validate_exclude_paths
+            global _validator_excludes
+            _validator_excludes = conf.validate_exclude_paths
+
+        if conf.incl_access_control_allow_origin:
+            global _incl_access_control_allow_origin
+            _incl_access_control_allow_origin = conf.incl_access_control_allow_origin
+
+        if conf.incl_access_control_allow_credentials:
+            global _incl_access_control_allow_credentials
+            _incl_access_control_allow_credentials = conf.incl_access_control_allow_credentials
 
         super(Server, self).__init__((conf.address, conf.port), _RequestHandler)
