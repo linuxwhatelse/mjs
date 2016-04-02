@@ -10,7 +10,7 @@ with open(path.join(here, 'README.md'), encoding='utf-8') as f:
 
 setup(
     name='mjs',
-    version='0.1.0',
+    version='0.2.0',
     description='A JSON-Server component which uses the mapper project',
     long_description=long_description,
     url='https://github.com/linuxwhatelse/mjs',
