@@ -9,7 +9,7 @@ with open(path.join(here, 'README.md'), encoding='utf-8') as f:
     long_description = f.read()
 
 setup(
-    name='mjs',
+    name='lwe-mjs',
     version='0.2.0',
     description='A JSON-Server component which uses the mapper project',
     long_description=long_description,
@@ -29,5 +29,10 @@ setup(
         'Programming Language :: Python :: 3.5',
     ],
     keywords='mapper json server mjs',
-    py_modules=['mjs'],
+    py_modules=[
+        'mjs'
+    ],
+    install_requires=[
+        'lwe-mapper'
+    ],
 )
