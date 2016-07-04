@@ -7,14 +7,11 @@ mjs - Mapper JSON Server
 2. [mapper.py](https://github.com/linuxwhatelse/mapper)
 
 ## Installation
-As this is a single file module with only one dependency being, [mapper.py](https://github.com/linuxwhatelse/mapper), you have two choices:
-
-1. Download [mjs.py](https://raw.githubusercontent.com/linuxwhatelse/mjs/master/mjs.py) and place it into the root directory of your project (next to mapper.py)
-2. Install it via setup.py
- * Make sure [mapper.py](https://github.com/linuxwhatelse/mapper) is installed
- * `git clone https://github.com/linuxwhatelse/mjs`
- * `cd mjs`
- * `python3 setup.py install`
+Just run:
+```bash
+pip install git+https://github.com/linuxwhatelse/mapper
+pip install git+https://github.com/linuxwhatelse/mjs
+```
 
 ## Usage
 It's pretty straight forward...
@@ -40,15 +37,15 @@ def index():
         'status_code' : 200,
 
         # (Optional) Alternative message to be sent to the client
-        'message'     : 'Success',
+        'message' : 'Success',
 
         # (Optional) A cookie to be sent to the client.
         # e.g. http.cookies.SimpleCookie()
-        'cookie'      : None,
+        'cookie' : None,
 
         # (Optional) Payload/Body to be sent to the client
         # Has to be of type dict or list
-        'payload'     : None
+        'payload' : None
     }
 
 if __name__ == '__main__':
@@ -61,11 +58,11 @@ if __name__ == '__main__':
     # The port to be used with the server
     conf.port = 8088
 
-    # A callback which will be called for EVERY request (GET, POST, PUT, DELETE)
-    # BEFORE the actual resolved function will be called.
+    # A callback to be called for EVERY request (GET, POST, PUT, DELETE)
+    # BEFORE the resolved function will be run.
     #
-    # This callback has to return either True (if the request is allowed), or
-    # False (if the request is NOT allowed)
+    # This callback HAS to return either True (if the request is allowed), or
+    # False (if the request should be denied)
     #
     # Usefully to implement e.g. authentication
     conf.validate_callback = validator
@@ -81,6 +78,7 @@ if __name__ == '__main__':
     print('use ctrl+c to exit')
     try:
         server.serve_forever()
+
     except KeyboardInterrupt:
         print('Server closed...')
 ```
