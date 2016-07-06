@@ -1,18 +1,10 @@
-from setuptools import setup, find_packages
-from codecs import open
-from os import path
-
-here = path.abspath(path.dirname(__file__))
-
-# Get the long description from the README file
-with open(path.join(here, 'README.md'), encoding='utf-8') as f:
-    long_description = f.read()
+from setuptools import setup
 
 setup(
     name='lwe-mjs',
     version='0.2.0',
     description='A JSON-Server component which uses the mapper project',
-    long_description=long_description,
+    long_description='For an overview and some examples, head over to `Github <https://github.com/linuxwhatelse/mjs>`_',
     url='https://github.com/linuxwhatelse/mjs',
     author='linuxwhatelse',
     author_email='info@linuxwhatelse.com',

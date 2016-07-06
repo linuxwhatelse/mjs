@@ -1,5 +1,7 @@
 mjs - Mapper JSON Server
 ========================
+[![pypi](https://img.shields.io/pypi/v/lwe-mjs.svg)](https://pypi.python.org/pypi/lwe-mjs)
+
 **mjs** is a simple server component which uses the [mapper project](https://github.com/linuxwhatelse/mapper) to run functions mapped to url patterns.
 
 ## Requirements
@@ -9,8 +11,7 @@ mjs - Mapper JSON Server
 ## Installation
 Just run:
 ```bash
-pip install git+https://github.com/linuxwhatelse/mapper
-pip install git+https://github.com/linuxwhatelse/mjs
+pip install lwe-mjs
 ```
 
 ## Usage
