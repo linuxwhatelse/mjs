@@ -1,11 +1,8 @@
 # -*- coding: utf-8 -*-
-import sys
-import os
-import traceback
-
 from http import server, cookies
 import json
 import datetime
+import traceback
 
 import mapper
 
@@ -13,6 +10,7 @@ _validator          = None
 _validator_excludes = None
 _incl_access_control_allow_origin      = False
 _incl_access_control_allow_credentials = False
+
 
 class _RequestHandler(server.BaseHTTPRequestHandler):
     _mpr         = mapper.Mapper()
@@ -28,7 +26,7 @@ class _RequestHandler(server.BaseHTTPRequestHandler):
 
         try:
             resp = self._mpr.call(url=self.path, method='GET',
-                args={'headers': self.headers})
+                                  args={'headers': self.headers})
 
         except Exception as e:
             traceback.print_exc()
@@ -43,9 +41,9 @@ class _RequestHandler(server.BaseHTTPRequestHandler):
             self._send_default_headers()
             self.end_headers()
 
-            if self._payload != None:
-                self.wfile.write(bytes(json.dumps(self._payload,
-                    default=self._serialize), 'utf-8'))
+            if self._payload is not None:
+                self.wfile.write(bytes(json.dumps(
+                    self._payload, default=self._serialize), 'utf-8'))
 
             else:
                 self.wfile.write(bytes(json.dumps([]), 'utf-8'))
@@ -74,7 +72,8 @@ class _RequestHandler(server.BaseHTTPRequestHandler):
             return
 
         try:
-            resp = self._mpr.call(url=self.path, method='POST',
+            resp = self._mpr.call(
+                url=self.path, method='POST',
                 args={'headers': self.headers, 'payload': data})
 
         except Exception as e:
@@ -114,7 +113,8 @@ class _RequestHandler(server.BaseHTTPRequestHandler):
             return
 
         try:
-            resp = self._mpr.call(url=self.path, method='PUT',
+            resp = self._mpr.call(
+                url=self.path, method='PUT',
                 args={'headers': self.headers, 'payload': data})
 
         except Exception as e:
@@ -202,9 +202,9 @@ class _RequestHandler(server.BaseHTTPRequestHandler):
 
     def _handle_mapper_response(self, response):
         self._status_code = response['status_code']
-        self._message     = response['message']     if 'message' in response else ''
-        self._cookie      = response['cookie']      if 'cookie'  in response else None
-        self._payload     = response['payload']     if 'payload' in response else None
+        self._message     = response['message'] if 'message' in response else ''
+        self._cookie      = response['cookie']  if 'cookie'  in response else None
+        self._payload     = response['payload'] if 'payload' in response else None
 
     def _send_error(self, error_message):
         self.send_response(500, error_message)
@@ -215,12 +215,15 @@ class _RequestHandler(server.BaseHTTPRequestHandler):
     def _send_default_headers(self):
         if _incl_access_control_allow_origin:
             if 'Origin' in self.headers:
-                self.send_header('Access-Control-Allow-Origin', self.headers['Origin'])
+                self.send_header('Access-Control-Allow-Origin',
+                                 self.headers['Origin'])
+
             else:
                 self.send_header('Access-Control-Allow-Origin', '*')
 
         self.send_header('Access-Control-Allow-Credentials',
-            str(_incl_access_control_allow_credentials).lower())
+                         str(_incl_access_control_allow_credentials).lower())
+
 
 class Config(object):
     """Config to be passed to the Server
@@ -260,7 +263,9 @@ class Config(object):
     validate_callback      = None
     validate_exclude_paths = None
 
+
 class Server(server.HTTPServer):
+
     def __init__(self, conf):
         """Constructor to initialize the server
 
