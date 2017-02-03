@@ -138,7 +138,7 @@ class _RequestHandler(server.BaseHTTPRequestHandler):
 
         try:
             resp = self._mpr.call(url=self.path, method='DELETE',
-                args={'headers': self.headers, 'payload': data})
+                args={'headers': self.headers})
 
         except Exception as e:
             traceback.print_exc()
