@@ -2,7 +2,7 @@ from setuptools import setup
 
 setup(
     name='lwe-mjs',
-    version='0.2.1',
+    version='0.3.0',
     description='A JSON-Server component which uses the mapper project',
     long_description='For an overview and some examples, head over to `Github <https://github.com/linuxwhatelse/mjs>`_',
     url='https://github.com/linuxwhatelse/mjs',
