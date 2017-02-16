@@ -73,6 +73,8 @@ if __name__ == '__main__':
 
     # Create a new server instance
     server = mjs.Server(conf)
+    # or
+    server = mjs.ThreadedServer(conf)
 
     # Start the server
     print('Server running: %s:%s' % (conf.address, conf.port))
