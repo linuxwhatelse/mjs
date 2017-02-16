@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 from http import server, cookies
+import socketserver
 import json
 import datetime
 import traceback
@@ -265,7 +266,6 @@ class Config(object):
 
 
 class Server(server.HTTPServer):
-
     def __init__(self, conf):
         """Constructor to initialize the server
 
@@ -289,3 +289,8 @@ class Server(server.HTTPServer):
             _incl_access_control_allow_credentials = conf.incl_access_control_allow_credentials
 
         super(Server, self).__init__((conf.address, conf.port), _RequestHandler)
+
+class ThreadedServer(socketserver.ThreadingMixIn, Server):
+    """Like `Server` but implements `socketserver.ThreadingMixIn` to
+       handle request with multiple threads"""
+    pass
