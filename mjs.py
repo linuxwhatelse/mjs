@@ -17,7 +17,7 @@ _incl_access_control_allow_credentials = False
 
 
 class _RequestHandler(server.BaseHTTPRequestHandler):
-    _mpr = mapper.Mapper()
+    _mpr = mapper.Mapper.get()
 
     _status_code = None
     _message = None
