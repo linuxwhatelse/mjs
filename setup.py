@@ -4,7 +4,8 @@ setup(
     name='lwe-mjs',
     version='0.3.0',
     description='A JSON-Server component which uses the mapper project',
-    long_description='For an overview and some examples, head over to `Github <https://github.com/linuxwhatelse/mjs>`_',
+    long_description='For an overview and some examples, head over to '
+                     '`Github <https://github.com/linuxwhatelse/mjs>`_',
     url='https://github.com/linuxwhatelse/mjs',
     author='linuxwhatelse',
     author_email='info@linuxwhatelse.com',

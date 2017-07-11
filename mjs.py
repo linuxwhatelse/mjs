@@ -7,19 +7,19 @@ import traceback
 
 import mapper
 
-_validator          = None
+_validator = None
 _validator_excludes = None
-_incl_access_control_allow_origin      = False
+_incl_access_control_allow_origin = False
 _incl_access_control_allow_credentials = False
 
 
 class _RequestHandler(server.BaseHTTPRequestHandler):
-    _mpr         = mapper.Mapper()
+    _mpr = mapper.Mapper()
 
     _status_code = None
-    _message     = None
-    _cookie      = None
-    _payload     = None
+    _message = None
+    _cookie = None
+    _payload = None
 
     def do_GET(self):
         if not self._validate():
@@ -139,7 +139,7 @@ class _RequestHandler(server.BaseHTTPRequestHandler):
 
         try:
             resp = self._mpr.call(url=self.path, method='DELETE',
-                args={'headers': self.headers})
+                                  args={'headers': self.headers})
 
         except Exception as e:
             traceback.print_exc()
@@ -159,7 +159,8 @@ class _RequestHandler(server.BaseHTTPRequestHandler):
     def do_OPTIONS(self):
         self.send_response(200)
         self._send_default_headers()
-        self.send_header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE')
+        self.send_header('Access-Control-Allow-Methods',
+                         'GET, POST, PUT, DELETE')
         self.send_header('Access-Control-Allow-Headers', 'Content-Type')
         self.end_headers()
 
@@ -203,9 +204,9 @@ class _RequestHandler(server.BaseHTTPRequestHandler):
 
     def _handle_mapper_response(self, response):
         self._status_code = response['status_code']
-        self._message     = response['message'] if 'message' in response else ''
-        self._cookie      = response['cookie']  if 'cookie'  in response else None
-        self._payload     = response['payload'] if 'payload' in response else None
+        self._message = response['message'] if 'message' in response else ''
+        self._cookie = response['cookie'] if 'cookie' in response else None
+        self._payload = response['payload'] if 'payload' in response else None
 
     def _send_error(self, error_message):
         self.send_response(500, error_message)
@@ -246,8 +247,8 @@ class Config(object):
             EVERY request (GET, POST, PUT, DELETE) BEFORE the actual resolved
             function will be called.
 
-            This callback HAS to return either True (if the request is allowed),
-            or False (if the request is NOT allowed)
+            This callback HAS to return either True (if the request is
+            allowed), or False (if the request is NOT allowed)
 
             Usefully to implement e.g. authentication
 
@@ -258,10 +259,10 @@ class Config(object):
     """
 
     address = '0.0.0.0'
-    port    = 8088
-    incl_access_control_allow_origin      = False
+    port = 8088
+    incl_access_control_allow_origin = False
     incl_access_control_allow_credentials = False
-    validate_callback      = None
+    validate_callback = None
     validate_exclude_paths = None
 
 
@@ -282,13 +283,17 @@ class Server(server.HTTPServer):
 
         if conf.incl_access_control_allow_origin:
             global _incl_access_control_allow_origin
-            _incl_access_control_allow_origin = conf.incl_access_control_allow_origin
+            _incl_access_control_allow_origin = (
+                conf.incl_access_control_allow_origin)
 
         if conf.incl_access_control_allow_credentials:
             global _incl_access_control_allow_credentials
-            _incl_access_control_allow_credentials = conf.incl_access_control_allow_credentials
+            _incl_access_control_allow_credentials = (
+                conf.incl_access_control_allow_credentials)
 
-        super(Server, self).__init__((conf.address, conf.port), _RequestHandler)
+        super(Server, self).__init__((conf.address, conf.port),
+                                     _RequestHandler)
+
 
 class ThreadedServer(socketserver.ThreadingMixIn, Server):
     """Like `Server` but implements `socketserver.ThreadingMixIn` to
