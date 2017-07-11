@@ -1,0 +1,12 @@
+/.venv
+
+/build
+
+/dist
+/*.egg-info
+
+/test.py
+/mapper.py
+
+__pycache__
+*.py[co]
