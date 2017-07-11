@@ -4,8 +4,11 @@ import socketserver
 import json
 import datetime
 import traceback
+import logging
 
 import mapper
+
+logger = logging.getLogger(__name__)
 
 _validator = None
 _validator_excludes = None
@@ -225,6 +228,9 @@ class _RequestHandler(server.BaseHTTPRequestHandler):
 
         self.send_header('Access-Control-Allow-Credentials',
                          str(_incl_access_control_allow_credentials).lower())
+
+    def log_message(self, format, *args):
+        logger.info(format % args)
 
 
 class Config(object):
