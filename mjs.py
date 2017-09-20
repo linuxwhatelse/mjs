@@ -13,7 +13,7 @@ LOGGER = logging.getLogger(__name__)
 
 
 class _RequestHandler(server.BaseHTTPRequestHandler):
-    _mpr = mapper.Mapper.get()
+    _mpr = None
 
     _status_code = None
     _message = None
@@ -25,7 +25,7 @@ class _RequestHandler(server.BaseHTTPRequestHandler):
             return
 
         try:
-            resp = self._mpr.call(url=self.path, method='GET',
+            resp = self.server._mpr.call(url=self.path, method='GET',
                                   args={'headers': self.headers})
 
         except Exception as e:
@@ -72,7 +72,7 @@ class _RequestHandler(server.BaseHTTPRequestHandler):
             return
 
         try:
-            resp = self._mpr.call(
+            resp = self.server._mpr.call(
                 url=self.path, method='POST',
                 args={'headers': self.headers, 'payload': data})
 
@@ -113,7 +113,7 @@ class _RequestHandler(server.BaseHTTPRequestHandler):
             return
 
         try:
-            resp = self._mpr.call(
+            resp = self.server._mpr.call(
                 url=self.path, method='PUT',
                 args={'headers': self.headers, 'payload': data})
 
@@ -137,7 +137,7 @@ class _RequestHandler(server.BaseHTTPRequestHandler):
             return
 
         try:
-            resp = self._mpr.call(url=self.path, method='DELETE',
+            resp = self.server._mpr.call(url=self.path, method='DELETE',
                                   args={'headers': self.headers})
 
         except Exception as e:
@@ -260,14 +260,17 @@ class Config(object):
             to be excluded from validation.
 
             e.g. ['/login', '/register']
-    """
 
+        mapper_name (str): Name of the mapper instance to use. Don't change
+            to use the default.
+    """
     address = '0.0.0.0'
     port = 8088
     incl_access_control_allow_origin = False
     incl_access_control_allow_credentials = False
     validate_callback = None
     validate_exclude_paths = None
+    mapper_name = None
 
 
 class Server(server.HTTPServer):
@@ -275,6 +278,7 @@ class Server(server.HTTPServer):
     _validator_excludes = None
     _access_control_allow_origin = None
     _access_control_allow_credentials = None
+    _mpr = None
 
     def __init__(self, conf):
         """Constructor to initialize the server
@@ -288,6 +292,11 @@ class Server(server.HTTPServer):
                 conf.incl_access_control_allow_origin)
         self._access_control_allow_credentials = (
                 conf.incl_access_control_allow_credentials)
+
+        if conf.mapper_name:
+            self._mpr = mapper.Mapper.get(conf.mapper_name)
+        else:
+            self._mpr = mapper.Mapper.get()
 
         super(Server, self).__init__((conf.address, conf.port),
                                      _RequestHandler)
