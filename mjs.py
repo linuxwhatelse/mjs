@@ -8,12 +8,8 @@ import logging
 
 import mapper
 
-logger = logging.getLogger(__name__)
 
-_validator = None
-_validator_excludes = None
-_incl_access_control_allow_origin = False
-_incl_access_control_allow_credentials = False
+LOGGER = logging.getLogger(__name__)
 
 
 class _RequestHandler(server.BaseHTTPRequestHandler):
@@ -174,6 +170,8 @@ class _RequestHandler(server.BaseHTTPRequestHandler):
         return serial
 
     def _validate(self):
+        _validator = self.server._validator
+        _validator_excludes = self.server._validator_excludes
         if not _validator:
             return True
 
@@ -218,7 +216,7 @@ class _RequestHandler(server.BaseHTTPRequestHandler):
         self.end_headers()
 
     def _send_default_headers(self):
-        if _incl_access_control_allow_origin:
+        if self.server._access_control_allow_origin:
             if 'Origin' in self.headers:
                 self.send_header('Access-Control-Allow-Origin',
                                  self.headers['Origin'])
@@ -226,11 +224,11 @@ class _RequestHandler(server.BaseHTTPRequestHandler):
             else:
                 self.send_header('Access-Control-Allow-Origin', '*')
 
-        self.send_header('Access-Control-Allow-Credentials',
-                         str(_incl_access_control_allow_credentials).lower())
+        allow = str(self.server._access_control_allow_credentials).lower()
+        self.send_header('Access-Control-Allow-Credentials', allow)
 
     def log_message(self, format, *args):
-        logger.info(format % args)
+        LOGGER.info(format % args)
 
 
 class Config(object):
@@ -273,28 +271,22 @@ class Config(object):
 
 
 class Server(server.HTTPServer):
+    _validator = None
+    _validator_excludes = None
+    _access_control_allow_origin = None
+    _access_control_allow_credentials = None
+
     def __init__(self, conf):
         """Constructor to initialize the server
 
         Args:
             conf (Config): configuration for this server instance
         """
-        if conf.validate_callback:
-            global _validator
-            _validator = conf.validate_callback
-
-        if conf.validate_exclude_paths:
-            global _validator_excludes
-            _validator_excludes = conf.validate_exclude_paths
-
-        if conf.incl_access_control_allow_origin:
-            global _incl_access_control_allow_origin
-            _incl_access_control_allow_origin = (
+        self._validator = conf.validate_callback
+        self._validator_excludes = conf.validate_exclude_paths
+        self._access_control_allow_origin = (
                 conf.incl_access_control_allow_origin)
-
-        if conf.incl_access_control_allow_credentials:
-            global _incl_access_control_allow_credentials
-            _incl_access_control_allow_credentials = (
+        self._access_control_allow_credentials = (
                 conf.incl_access_control_allow_credentials)
 
         super(Server, self).__init__((conf.address, conf.port),
