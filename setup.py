@@ -25,6 +25,6 @@ setup(
         'mjs'
     ],
     install_requires=[
-        'lwe-mapper >= 1.2.1'
+        'lwe-mapper >= 1.2.2'
     ],
 )
