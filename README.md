@@ -20,7 +20,7 @@ It's pretty straight forward...
 import mjs
 import mapper
 
-mpr = mapper.Mapper()
+mpr = mapper.Mapper.get()
 
 def validator(path, headers):
     # Would verify if the request is allowed or not
