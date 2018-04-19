@@ -8,7 +8,7 @@ setup(
                      '`Github <https://github.com/linuxwhatelse/mjs>`_',
     url='https://github.com/linuxwhatelse/mjs',
     author='linuxwhatelse',
-    author_email='info@linuxwhatelse.com',
+    author_email='info@linuxwhatelse.de',
     license='GPLv3',
     classifiers=[
         'Development Status :: 4 - Beta',
